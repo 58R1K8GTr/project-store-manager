@@ -19,4 +19,10 @@ describe('testes do productsModel', function () {
     const product = await productModel.findById(1);
     expect(product).to.be.deep.equal(productsDBMock[0]);
   });
+
+  it('função insert insere o dado corretamente', async function () {
+    sinon.stub(connection, 'execute').resolves([{ insertId: 1 }]);
+    const insertId = await productModel.insert({ name: 'product' });
+    expect(insertId).to.be.equal(1);
+  });
 });

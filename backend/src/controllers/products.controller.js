@@ -12,4 +12,10 @@ async function find(req, res) {
   return res.status(200).json(product);
 }
 
-module.exports = { list, find };
+async function create(req, res) {
+  const product = req.body;
+  const newProduct = await productsService.insert(product);
+  return res.status(201).json(newProduct);
+}
+
+module.exports = { list, find, create };

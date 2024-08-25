@@ -26,4 +26,10 @@ describe('testando o productService', function () {
     const product = await productService.findById(1);
     expect(product).to.be.deep.equal({ message: 'Product not found' });
   });
+
+  it('função insert retorna produto inserido corretamente', async function () {
+    sinon.stub(productModel, 'insert').resolves(1);
+    const product = await productService.insert({ name: 'product' });
+    expect(product).to.be.deep.equal({ id: 1, name: 'product' });
+  });
 });
