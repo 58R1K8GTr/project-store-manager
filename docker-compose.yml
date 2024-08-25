@@ -16,6 +16,7 @@ services:
       MYSQL_HOSTNAME: db
       MYSQL_PORT: 3306
       PORT: 3001
+      MYSQL_DATABASE: StoreManager
     depends_on:
       db:
         condition: service_healthy
