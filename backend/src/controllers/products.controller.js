@@ -1,21 +1,21 @@
 const productsService = require('../services/products.service');
 
 async function list(_req, res) {
-  const products = await productsService.findAll();
-  return res.status(200).json(products);
+  const { status, data } = await productsService.findAll();
+  return res.status(status).json(data);
 }
 
 async function find(req, res) {
   const { id } = req.params;
-  const product = await productsService.findById(id);
-  if (product.message) return res.status(404).json(product);
-  return res.status(200).json(product);
+  const { status, data } = await productsService.findById(id);
+  if (data.message) return res.status(status).json(data);
+  return res.status(status).json(data);
 }
 
 async function create(req, res) {
   const product = req.body;
-  const newProduct = await productsService.insert(product);
-  return res.status(201).json(newProduct);
+  const { status, data } = await productsService.insert(product);
+  return res.status(status).json(data);
 }
 
 module.exports = { list, find, create };

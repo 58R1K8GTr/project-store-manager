@@ -1,15 +1,15 @@
 const salesService = require('../services/sales.service');
 
 async function list(_req, res) {
-  const sales = await salesService.findAll();
-  return res.status(200).json(sales);
+  const { status, data } = await salesService.findAll();
+  return res.status(status).json(data);
 }
 
 async function find(req, res) {
   const id = Number(req.params.id);
-  const sales = await salesService.findById(id);
-  if (sales.message) return res.status(404).json(sales);
-  return res.status(200).json(sales);
+  const { status, data } = await salesService.findById(id);
+  if (data.message) return res.status(status).json(data);
+  return res.status(status).json(data);
 }
 
 module.exports = { list, find };

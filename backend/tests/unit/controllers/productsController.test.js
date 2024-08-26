@@ -26,34 +26,36 @@ describe('testando o productsController', function () {
   });
 
   it('função list retorna o json com os products', async function () {
-    sinon.stub(productService, 'findAll').resolves(productsDBMock);
+    const resultMock = { status: 200, data: productsDBMock };
+    sinon.stub(productService, 'findAll').resolves(resultMock);
     await productController.list({}, res);
-    expect(res.json).to.have.been.calledWith(productsDBMock);
-    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
   });
 
   it('função find retorna o json com uma mensagem de produto não encontrado', async function () {
-    const objectMessage = { message: 'Product not found' };
-    sinon.stub(productService, 'findById').resolves(objectMessage);
+    const resultMock = { status: 404, data: { message: 'Product not found' } };
+    sinon.stub(productService, 'findById').resolves(resultMock);
     const wrongReq = {
       params: {
         id: 999,
       },
     };
     await productController.find(wrongReq, res);
-    expect(res.json).to.have.been.calledWith(objectMessage);
-    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
   });
 
   it('função find retorna o produto encontrado', async function () {
-    sinon.stub(productService, 'findById').resolves(productsDBMock[0]);
+    const resultMock = { status: 200, data: productsDBMock[0] };
+    sinon.stub(productService, 'findById').resolves(resultMock);
     await productController.find(req, res);
-    expect(res.json).to.have.been.calledWith(productsDBMock[0]);
-    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
   });
 
-  it('função create retorna o status 200 caso produto seja cadastrado', async function () {
-    const resultMock = { id: 1, name: 'product' };
+  it('função create cadastra o produto', async function () {
+    const resultMock = { status: 201, data: { id: 1, name: 'product' } };
     const reqWithProductName = {
       body: {
         name: 'product',
@@ -61,7 +63,7 @@ describe('testando o productsController', function () {
     };
     sinon.stub(productService, 'insert').resolves(resultMock);
     await productController.create(reqWithProductName, res);
-    expect(res.json).to.have.been.calledWith(resultMock);
-    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
   });
 });
