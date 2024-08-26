@@ -2,6 +2,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonchai = require('sinon-chai');
 const salesDBMock = require('../mocks/salesDB.json');
+const salesProductsServiceDB = require('../mocks/salesProductsServiceDB.json');
 const salesService = require('../../../src/services/sales.service');
 const salesController = require('../../../src/controllers/sales.controller');
 
@@ -45,6 +46,14 @@ describe('testando o salesController', function () {
     const resultMock = { status: 404, data: { message: 'Sale not found' } };
     sinon.stub(salesService, 'findById').resolves(resultMock);
     await salesController.find(req, res);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
+  });
+
+  it('função create retorna os dados caso sejam cadastrados com sucesso', async function () {
+    const resultMock = { status: 201, data: salesProductsServiceDB };
+    sinon.stub(salesService, 'insert').resolves(resultMock);
+    await salesController.create(req, res);
     expect(res.json).to.have.been.calledWith(resultMock.data);
     expect(res.status).to.have.been.calledWith(resultMock.status);
   });

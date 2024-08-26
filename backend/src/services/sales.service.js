@@ -13,4 +13,9 @@ async function findById(id) {
   return { status: 200, data: sales };
 }
 
-module.exports = { findAll, findById };
+async function insert(sales) {
+  const salesResponse = await salesModel.insert(sales);
+  return { status: 201, data: salesResponse };
+}
+
+module.exports = { findAll, findById, insert };

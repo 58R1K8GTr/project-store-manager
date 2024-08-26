@@ -36,4 +36,17 @@ describe('testando o salesService', function () {
     const sale = await salesService.findById(999);
     expect(sale).to.be.deep.equal(resultMock);
   });
+
+  it('função insert retorna mensagem com os dados corretos', async function () {
+    const resultMock = {
+      status: 201,
+      data: {
+        id: 1,
+        itemsSold: salesDBMock,
+      },
+    };
+    sinon.stub(salesModel, 'insert').resolves(resultMock.data);
+    const sales = await salesService.insert(salesDBMock);
+    expect(sales).to.be.deep.equal(resultMock);
+  });
 });

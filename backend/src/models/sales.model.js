@@ -36,4 +36,25 @@ async function findById(id) {
   return sales;
 }
 
-module.exports = { findAll, findById };
+async function insertSale() {
+  const sql = 'INSERT INTO sales (date) VALUES (NOW())';
+  const [{ insertId: saleId }] = await connection.execute(sql);
+  return saleId;
+}
+
+async function insert(sales) {
+  const saleId = await insertSale();
+  const salesProductsValues = sales
+    .flatMap(({ productId, quantity }) => [productId, saleId, quantity]);
+  const placeholders = sales.map(() => '(?, ?, ?)').join(', ');
+  const sql = `
+    INSERT INTO sales_products (product_id, sale_id, quantity) VALUES ${placeholders}
+  `;
+  await connection.execute(sql, salesProductsValues);
+  return {
+    id: saleId,
+    itemsSold: sales,
+  };
+}
+
+module.exports = { findAll, findById, insert };
