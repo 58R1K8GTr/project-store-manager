@@ -1,4 +1,5 @@
 const salesModel = require('../models/sales.model');
+const { validatePostSale } = require('./validations/validatePostSale');
 
 async function findAll() {
   const sales = await salesModel.findAll();
@@ -14,6 +15,8 @@ async function findById(id) {
 }
 
 async function insert(sales) {
+  const error = await validatePostSale(sales);
+  if (error) return error;
   const salesResponse = await salesModel.insert(sales);
   return { status: 201, data: salesResponse };
 }

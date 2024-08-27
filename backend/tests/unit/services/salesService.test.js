@@ -1,6 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const salesDBMock = require('../mocks/salesDB.json');
+const salesProductsDBMock = require('../mocks/salesProductsDB.json');
 const salesService = require('../../../src/services/sales.service');
 const salesModel = require('../../../src/models/sales.model');
 
@@ -46,7 +47,7 @@ describe('testando o salesService', function () {
       },
     };
     sinon.stub(salesModel, 'insert').resolves(resultMock.data);
-    const sales = await salesService.insert(salesDBMock);
+    const sales = await salesService.insert(salesProductsDBMock);
     expect(sales).to.be.deep.equal(resultMock);
   });
 });

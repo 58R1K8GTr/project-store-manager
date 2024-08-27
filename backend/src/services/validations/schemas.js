@@ -7,4 +7,17 @@ const productPostSchema = joi.object({
   }),
 });
 
-module.exports = { productPostSchema };
+const salePostSchema = joi.array().items(
+  joi.object({
+    productId: joi.number().integer().required().messages({
+      'any.required': '"productId" is required',
+    }),
+    quantity: joi.number().integer().min(1).required()
+      .messages({
+        'any.required': '"quantity" is required',
+        'number.min': '"quantity" must be greater than or equal to 1',
+      }),
+  }),
+);
+
+module.exports = { productPostSchema, salePostSchema };
