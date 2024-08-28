@@ -55,4 +55,42 @@ describe('testando o productService', function () {
       { status: 400, data: { message: '"name" is required' } },
     );
   });
+
+  it('função update insere os dados corretamente', async function () {
+    const resultMock = {
+      status: 200,
+      data: {
+        id: 1,
+        name: 'Martelo do Batman',
+      },
+    };
+    sinon.stub(productModel, 'update').resolves(resultMock.data);
+    const product = await productService.update(resultMock.data);
+    expect(product).to.be.deep.equal(resultMock);
+  });
+
+  it('função update não insere os dados caso o name seja curto', async function () {
+    const updateMock = {
+      id: 1,
+      name: 'asdf',
+    };
+    const resultMock = {
+      status: 422,
+      data: { message: '"name" length must be at least 5 characters long' },
+    };
+    const error = await productService.update(updateMock);
+    expect(error).to.be.deep.equal(resultMock);
+  });
+
+  it('função update não insere os dados caso o name não seja passado', async function () {
+    const updateMock = {
+      id: 1,
+    };
+    const resultMock = {
+      status: 400,
+      data: { message: '"name" is required' },
+    };
+    const error = await productService.update(updateMock);
+    expect(error).to.be.deep.equal(resultMock);
+  });
 });

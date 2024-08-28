@@ -18,4 +18,11 @@ async function create(req, res) {
   return res.status(status).json(data);
 }
 
-module.exports = { list, find, create };
+async function update(req, res) {
+  const product = req.body;
+  const id = Number(req.params.id);
+  const { status, data } = await productsService.update({ id, ...product });
+  return res.status(status).json(data);
+}
+
+module.exports = { list, find, create, update };

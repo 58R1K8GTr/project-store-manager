@@ -66,4 +66,20 @@ describe('testando o productsController', function () {
     expect(res.json).to.have.been.calledWith(resultMock.data);
     expect(res.status).to.have.been.calledWith(resultMock.status);
   });
+
+  it('função update atualiza os dados corretamente', async function () {
+    const resultMock = { status: 200, data: { id: 1, name: 'product' } };
+    const reqWithProductName = {
+      params: {
+        id: 1,
+      },
+      body: {
+        name: 'product',
+      },
+    };
+    sinon.stub(productService, 'update').resolves(resultMock);
+    await productController.update(reqWithProductName, res);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
+  });
 });

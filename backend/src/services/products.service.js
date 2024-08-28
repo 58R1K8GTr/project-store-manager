@@ -1,5 +1,5 @@
 const productsModel = require('../models/products.model');
-const { validatePostProduct } = require('./validations/validatePostProduct');
+const { validatePostProduct, validatePutProduct } = require('./validations/validateProduct');
 
 async function findAll() {
   const products = await productsModel.findAll();
@@ -24,4 +24,11 @@ async function insert(product) {
   return { status: 201, data: { id, ...product } };
 }
 
-module.exports = { findAll, findById, insert };
+async function update(product) {
+  const errorObject = await validatePutProduct(product);
+  if (errorObject) return errorObject;
+  const newProduct = await productsModel.update(product);
+  return { status: 200, data: newProduct };
+}
+
+module.exports = { findAll, findById, insert, update };

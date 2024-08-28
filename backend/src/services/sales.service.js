@@ -1,5 +1,5 @@
 const salesModel = require('../models/sales.model');
-const { validatePostSale } = require('./validations/validatePostSale');
+const { validatePostSale } = require('./validations/validateSale');
 
 async function findAll() {
   const sales = await salesModel.findAll();
