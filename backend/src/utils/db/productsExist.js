@@ -1,6 +1,6 @@
 const connection = require('../../models/connection');
 
-async function allProductsExists(sales) {
+async function allProductsExist(sales) {
   const productIds = sales.map(({ productId }) => productId).join(', ');
   const sql = `
     SELECT COUNT(*) = ${sales.length} AS allExists FROM products
@@ -10,4 +10,4 @@ async function allProductsExists(sales) {
   return allExists;
 }
 
-module.exports = allProductsExists;
+module.exports = { allProductsExist };

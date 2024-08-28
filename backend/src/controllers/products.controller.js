@@ -25,4 +25,14 @@ async function update(req, res) {
   return res.status(status).json(data);
 }
 
-module.exports = { list, find, create, update };
+async function remove(req, res) {
+  const id = Number(req.params.id);
+  const { status, data = false } = await productsService.remove({ id });
+  const resWithStatus = res.status(status);
+  if (data) {
+    return resWithStatus.json(data);
+  }
+  return resWithStatus.end();
+}
+
+module.exports = { list, find, create, update, remove };

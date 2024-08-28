@@ -1,5 +1,9 @@
 const productsModel = require('../models/products.model');
-const { validatePostProduct, validatePutProduct } = require('./validations/validateProduct');
+const {
+  validatePostProduct,
+  validatePutProduct,
+  validateDeleteProduct,
+} = require('./validations/validateProduct');
 
 async function findAll() {
   const products = await productsModel.findAll();
@@ -31,4 +35,11 @@ async function update(product) {
   return { status: 200, data: newProduct };
 }
 
-module.exports = { findAll, findById, insert, update };
+async function remove({ id }) {
+  const error = await validateDeleteProduct({ id });
+  if (error) return error;
+  await productsModel.remove(id);
+  return { status: 204 };
+}
+
+module.exports = { findAll, findById, insert, update, remove };

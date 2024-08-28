@@ -1,9 +1,12 @@
 const chai = require('chai');
 const sinon = require('sinon');
+const sinonchai = require('sinon-chai');
 const productModel = require('../../../src/models/products.model');
 const productService = require('../../../src/services/products.service');
 const productsDBMock = require('../mocks/productsDB.json');
+const productsExist = require('../../../src/utils/db/productsExist');
 
+chai.use(sinonchai);
 const { expect } = chai;
 
 describe('testando o productService', function () {
@@ -92,5 +95,19 @@ describe('testando o productService', function () {
     };
     const error = await productService.update(updateMock);
     expect(error).to.be.deep.equal(resultMock);
+  });
+
+  it('função remove deleta um produto com sucesso', async function () {
+    sinon.stub(productModel, 'remove').resolves();
+    sinon.stub(productsExist, 'allProductsExist').resolves(true);
+    await productService.remove({ id: 1 });
+    expect(productModel.remove).to.have.been.calledWith(1);
+  });
+
+  it('função remove não deleta produto caso ele não exista', async function () {
+    sinon.stub(productModel, 'remove').resolves();
+    sinon.stub(productsExist, 'allProductsExist').resolves(false);
+    await productService.remove({ id: 1 });
+    expect(productModel.remove.called).to.be.equal(false);
   });
 });

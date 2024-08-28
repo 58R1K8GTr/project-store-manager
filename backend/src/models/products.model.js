@@ -24,4 +24,9 @@ async function update({ name, id }) {
   return { name, id };
 }
 
-module.exports = { findAll, findById, insert, update };
+async function remove(id) {
+  const sql = 'DELETE FROM products WHERE id = ?';
+  await connection.execute(sql, [id]);
+}
+
+module.exports = { findAll, findById, insert, update, remove };

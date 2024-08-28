@@ -1,5 +1,5 @@
 const { salePostSchema } = require('./schemas');
-const allProductsExists = require('../../utils/db/productsExist');
+const productsExist = require('../../utils/db/productsExist');
 
 const statusCode = {
   'any.required': 400,
@@ -14,7 +14,7 @@ async function validatePostSale(sales) {
       data: { message: error.message },
     };
   }
-  const exists = await allProductsExists(sales);
+  const exists = await productsExist.allProductsExist(sales);
   if (!exists) {
     return {
       status: 404,

@@ -1,9 +1,11 @@
 const chai = require('chai');
 const sinon = require('sinon');
+const sinonchai = require('sinon-chai');
 const connection = require('../../../src/models/connection');
 const productsDBMock = require('../mocks/productsDB.json');
 const productModel = require('../../../src/models/products.model');
 
+chai.use(sinonchai);
 const { expect } = chai;
 
 const updateMock = {
@@ -33,7 +35,15 @@ describe('testes do productsModel', function () {
 
   it('função update deve alterar os dados corretamente', async function () {
     sinon.stub(connection, 'execute').resolves([{ insertId: 1 }]);
-    const productAndId = await productModel.update(updateMock);
-    expect(productAndId).to.be.deep.equal(updateMock);
+    const product = await productModel.update(updateMock);
+    expect(product).to.be.deep.equal(updateMock);
+  });
+
+  it('função remove deve deletar um produto com sucesso', async function () {
+    const sqlMock = 'DELETE FROM products WHERE id = ?';
+    // connection.execute = sinon.stub().resolves();
+    sinon.stub(connection, 'execute').resolves();
+    await productModel.remove(1);
+    expect(connection.execute).to.have.been.calledWith(sqlMock, [1]);
   });
 });

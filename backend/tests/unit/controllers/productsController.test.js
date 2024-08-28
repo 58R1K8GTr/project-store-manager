@@ -13,6 +13,7 @@ describe('testando o productsController', function () {
   const res = {
     json: sinon.stub(),
     status: sinon.stub().returnsThis(),
+    end: sinon.stub(),
   };
   const req = {
     params: {
@@ -69,7 +70,7 @@ describe('testando o productsController', function () {
 
   it('função update atualiza os dados corretamente', async function () {
     const resultMock = { status: 200, data: { id: 1, name: 'product' } };
-    const reqWithProductName = {
+    const reqWithId = {
       params: {
         id: 1,
       },
@@ -78,8 +79,26 @@ describe('testando o productsController', function () {
       },
     };
     sinon.stub(productService, 'update').resolves(resultMock);
-    await productController.update(reqWithProductName, res);
+    await productController.update(reqWithId, res);
     expect(res.json).to.have.been.calledWith(resultMock.data);
     expect(res.status).to.have.been.calledWith(resultMock.status);
+  });
+
+  it('função remove deleta um produto com sucesso', async function () {
+    const resultMock = { status: 204 };
+    const reqMock = { params: { id: 1 } };
+    sinon.stub(productService, 'remove').resolves(resultMock);
+    await productController.remove(reqMock, res);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
+    expect(res.end.called).to.be.equal(true);
+  });
+
+  it('função remove não deleta o produto com sucesso', async function () {
+    const resultMock = { status: 404, data: { message: 'Product not found' } };
+    const reqMock = { params: { id: 1 } };
+    sinon.stub(productService, 'remove').resolves(resultMock);
+    await productController.remove(reqMock, res);
+    expect(res.status).to.have.been.calledWith(resultMock.status);
+    expect(res.json).to.have.been.calledWith(resultMock.data);
   });
 });

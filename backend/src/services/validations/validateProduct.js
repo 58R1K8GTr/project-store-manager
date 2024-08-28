@@ -17,7 +17,7 @@ function validatePostProduct(product) {
 }
 
 async function validatePutProduct({ id, name }) {
-  const allExist = await productsExist([{ productId: id, name }]);
+  const allExist = await productsExist.allProductsExist([{ productId: id, name }]);
   if (!allExist) {
     return {
       status: 404,
@@ -33,4 +33,14 @@ async function validatePutProduct({ id, name }) {
   }
 }
 
-module.exports = { validatePostProduct, validatePutProduct };
+async function validateDeleteProduct({ id }) {
+  const allExist = await productsExist.allProductsExist([{ productId: id }]);
+  if (!allExist) {
+    return {
+      status: 404,
+      data: { message: 'Product not found' },
+    }; 
+  }
+}
+
+module.exports = { validatePostProduct, validatePutProduct, validateDeleteProduct };
